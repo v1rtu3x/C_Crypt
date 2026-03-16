@@ -1,0 +1,148 @@
+name: c_crypt CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  gcc-debug:
+    name: GCC Debug
+    runs-on: ubuntu-latest
+    env:
+      CC: gcc
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build gcc
+
+      - name: Configure
+        run: |
+          cmake -S . -B build-gcc-debug \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DBUILD_TESTS=ON \
+            -DC_CRYPT_WARNINGS_AS_ERRORS=ON
+
+      - name: Build
+        run: |
+          cmake --build build-gcc-debug
+
+      - name: Test
+        run: |
+          ctest --test-dir build-gcc-debug --output-on-failure
+
+  gcc-release:
+    name: GCC Release
+    runs-on: ubuntu-latest
+    env:
+      CC: gcc
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build gcc
+
+      - name: Configure
+        run: |
+          cmake -S . -B build-gcc-release \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_TESTS=ON \
+            -DC_CRYPT_WARNINGS_AS_ERRORS=ON
+
+      - name: Build
+        run: |
+          cmake --build build-gcc-release
+
+      - name: Test
+        run: |
+          ctest --test-dir build-gcc-release --output-on-failure
+
+  clang-debug:
+    name: Clang Debug
+    runs-on: ubuntu-latest
+    env:
+      CC: clang
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build clang
+
+      - name: Configure
+        run: |
+          cmake -S . -B build-clang-debug \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DBUILD_TESTS=ON \
+            -DC_CRYPT_WARNINGS_AS_ERRORS=ON
+
+      - name: Build
+        run: |
+          cmake --build build-clang-debug
+
+      - name: Test
+        run: |
+          ctest --test-dir build-clang-debug --output-on-failure
+
+  clang-release:
+    name: Clang Release
+    runs-on: ubuntu-latest
+    env:
+      CC: clang
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build clang
+
+      - name: Configure
+        run: |
+          cmake -S . -B build-clang-release \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_TESTS=ON \
+            -DC_CRYPT_WARNINGS_AS_ERRORS=ON
+
+      - name: Build
+        run: |
+          cmake --build build-clang-release
+
+      - name: Test
+        run: |
+          ctest --test-dir build-clang-release --output-on-failure
+
+  sanitizer:
+    name: Sanitizers
+    runs-on: ubuntu-latest
+    env:
+      CC: clang
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build clang
+
+      - name: Make sanitizer script executable
+        run: |
+          chmod +x ci/sanitizer.sh
+
+      - name: Run sanitizer build
+        run: |
+          ./ci/sanitizer.sh
