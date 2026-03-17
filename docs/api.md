@@ -5,11 +5,10 @@ The goal is to ensure the codebase remains **consistent, readable, and predictab
 
 ---
 
-# Library Prefix
+## Library Prefix
 
 All public symbols in the library must use the prefix:
 `c_`
-
 
 This prefix ensures:
 
@@ -19,7 +18,7 @@ This prefix ensures:
 
 Examples:
 
-```
+``` c
 c_sha256_init
 c_sha256_update
 c_sha256_final
@@ -27,8 +26,7 @@ c_aes256_encrypt_block
 c_chacha20_stream
 ```
 
-
-# Naming Conventions
+## Naming Conventions
 
 The library follows **snake_case** naming for all functions and variables.
 
@@ -36,7 +34,7 @@ Naming patterns depend on the type of symbol.
 
 ---
 
-# Public Functions
+## Public Functions
 
 Public API functions must follow the format:
 
@@ -49,7 +47,7 @@ Where:
 
 Examples:
 
-```
+``` c
 c_sha256_init
 c_sha256_update
 c_sha256_final
@@ -63,8 +61,7 @@ c_ed25519_sign
 c_ed25519_verify
 ```
 
-
-## Guidelines:
+Guidelines
 
 - use **verb-oriented naming**
 - keep function names concise
@@ -73,7 +70,7 @@ c_ed25519_verify
 
 ---
 
-# Internal Functions
+## Internal Functions
 
 Internal functions must not be exposed through public headers.
 
@@ -82,32 +79,35 @@ They use the prefix:
 `c_internal_<module>_<operation>`
 
 Examples:
-```
+
+``` c
 c_internal_sha256_transform
 c_internal_aes_key_expand
 c_internal_bigint_mul_word
 ```
 
-## Guidelines:
+Guidelines
 
 - internal symbols should never appear in installed headers
 - internal helpers should remain within their module
 - avoid exposing internal APIs across unrelated modules
+
 ---
 
-# Structs
+## Structs
 
 Public struct types follow the format:
 `c_<module>_<name>_t`
 
 Examples:
-```
+
+``` c
 c_sha256_ctx_t
 c_aes_key_t
 c_rng_state_t
 ```
 
-## Guidelines:
+### Guidelines
 
 - `_ctx_t` suffix should be used for algorithm contexts
 - `_key_t` suffix should be used for key structures
@@ -115,7 +115,7 @@ c_rng_state_t
 
 Examples:
 
-```
+```c
 c_sha256_ctx_t
 c_chacha20_ctx_t
 c_aes_key_t
@@ -129,17 +129,17 @@ Example:
 
 `c_internal_bigint_wordvec_t`
 
-
 ---
 
-# Enums
+### Enums
 
 Enum types use the suffix:
 `_e`
 Format:
 `c_<name>_e`
 Examples:
-```
+
+```c
 c_err_e
 c_cipher_mode_e
 ```
@@ -150,7 +150,7 @@ Enum values use uppercase constants:
 
 Examples:
 
-```
+```c
 C_ERR_OK
 C_ERR_BAD_ARG
 C_ERR_INVALID_KEY
@@ -169,7 +169,7 @@ typedef enum
 } c_err_e;
 ```
 
-# Macros
+## Macros
 
 Public macros must use uppercase names with the prefix:
 
@@ -179,37 +179,39 @@ Format:
 `C_<MODULE>_<NAME>`
 
 Examples:
-```
+
+```c
 C_SHA256_BLOCK_SIZE
 C_SHA256_DIGEST_SIZE
 C_AES_BLOCK_SIZE
 C_VERSION_MAJOR
 ```
 
-## Guidelines:
+Guidelines
 
 - macros should only be used for compile-time constants
 - prefer static const for internal constants
 - avoid function-like macros when possible
 
-# Constants
+## Constants
 
 Constants follow two different conventions depending on visibility.
 
-# 1. Public constants
+### 1. Public constants
 
 Public compile-time constants should be defined as macros:
 
 `C_<MODULE>_<NAME>`
 
 Examples:
-```
+
+```c
 C_SHA256_BLOCK_SIZE
 C_SHA256_DIGEST_SIZE
 C_AES_BLOCK_SIZE
 ```
 
-# 2.Internal constants
+### 2.Internal constants
 
 Internal constants should use static const variables:
 
@@ -219,13 +221,12 @@ Examples:
 
 `static const uint32_t c_internal_sha256_k[64];`
 
-## Guidelines:
+Guidelines
 
 - avoid exposing large constant tables in public headers
 - keep algorithm constants private to their module
 
-
-# Naming Summary
+## Naming Summary
 
 | Symbol Type       | Format                            | Example                       |
 | ----------------- | --------------------------------- | ----------------------------- |
@@ -238,7 +239,7 @@ Examples:
 | Public macro      | `C_<MODULE>_<NAME>`               | `C_SHA256_DIGEST_SIZE`        |
 | Internal constant | `c_internal_<module>_<name>`      | `c_internal_sha256_k`         |
 
-# General Rules
+## General Rules
 
 - All public symbols must begin with c_
 - All internal symbols must begin with c_internal_
@@ -248,12 +249,79 @@ Examples:
 - Public headers must expose only the stable API
 - Internal headers must never be installed or exported
 
-# Future Extensions
+## Error Handling Style
+
+C_Crypt uses **return codes** for all public API functions.
+
+### Rule
+
+- all public functions return `c_err_e`
+- `C_ERR_OK` indicates success
+- any other value indicates failure
+- functions must never use global error state
+- functions must never print errors directly
+- functions must never terminate the process
+
+### Example
+
+```c
+c_err_e c_sha256_update(c_sha256_ctx_t *ctx, const uint8_t *data, size_t len);
+```
+
+Usage:
+
+```c
+c_err_e err;
+
+err = c_sha256_update(&ctx, data, len);
+if (err != C_ERR_OK)
+{
+    return err;
+}
+```
+
+## Memory Ownership Rules
+
+C_Crypt follows a caller-owned memory model unless explicitly documented otherwise.
+
+### Rules
+
+- the caller allocates all input and output buffers
+- the caller owns all context objects unless an API explicitly creates them
+- the library does not take ownership of caller-provided pointers
+- the library does not free caller memory
+- dynamic allocation should be avoided in public APIs unless absolutely necessary
+
+### Consequences
+
+- APIs should prefer stack-friendly context structs or caller-provided storage
+- output buffers must be passed in by the caller
+- APIs should expose required output sizes clearly
+
+Example
+`c_err_e c_sha256_final(c_sha256_ctx_t *ctx, uint8_t digest[32]);`
+
+The caller owns:
+
+- ctx
+- digest
+
+## Future Extensions
 
 As the library grows, additional conventions may be defined for:
 
 - module naming rules
-- error handling patterns
 - context lifecycle (init, update, final)
 - serialization and parsing APIs
-- memory ownership conventions
+
+## Naming Policy
+
+- all installed public headers must live under include/c_crypt/
+- public submodules may use directories such as:
+  - include/c_crypt/hash/
+  - include/c_crypt/mac/
+  - include/c_crypt/cipher/
+  - include/c_crypt/aead/
+  - include/c_crypt/kdf/
+  - include/c_crypt/pk/
+  - include/c_crypt/encoding/

@@ -1,8 +1,8 @@
-## Coding Style
+# Coding Style
 
 C_Crypt uses `clang-format` for formatting. All contributed C source and header files must be formatted before submission.
 
-### Formatting rules
+## Formatting rules
 
 - 4 spaces per indentation level
 - no tabs
@@ -14,7 +14,7 @@ C_Crypt uses `clang-format` for formatting. All contributed C source and header 
 - no trailing whitespace
 - files must end with a newline
 
-### Include order
+## Include order
 
 Source files should include headers in this order:
 
@@ -24,7 +24,7 @@ Source files should include headers in this order:
 4. public project headers
 5. internal project headers
 
-### Formatting command
+## Formatting command
 
 Run:
 
@@ -32,8 +32,8 @@ Run:
 ./scripts/format.sh
 ```
 
-or 
+or :
 
-```
+``` make
 make format
 ```

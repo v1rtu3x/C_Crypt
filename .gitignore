@@ -1,2 +1,4 @@
 /build
 /build-sanitize
+/build-bench
+/build-examples

@@ -1,4 +1,4 @@
-## Code Formatting Policy
+# Code Formatting Policy
 
 C_Crypt uses `clang-format` for automatic formatting.
 

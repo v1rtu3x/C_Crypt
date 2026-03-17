@@ -246,7 +246,15 @@ if(BUILD_EXAMPLES)
     )
 
     target_link_libraries(c_crypt_example_placeholder PRIVATE c_crypt_static)
-    target_compile_options(c_crypt_example_placeholder PRIVATE ${C_CRYPT_WARNING_FLAGS})
+
+    target_include_directories(c_crypt_example_placeholder PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+    )
+
+    target_compile_options(c_crypt_example_placeholder PRIVATE
+        ${C_CRYPT_WARNING_FLAGS}
+    )
 endif()
 
 # -----------------------------------------------------------------------------
