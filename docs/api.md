@@ -325,3 +325,14 @@ As the library grows, additional conventions may be defined for:
   - include/c_crypt/kdf/
   - include/c_crypt/pk/
   - include/c_crypt/encoding/
+
+## Secure Memory Wipe Policy
+
+C_Crypt provides `c_secure_zero()` and `c_memzero()` for clearing sensitive memory.
+
+Behavior:
+
+- `ptr == NULL && len == 0` is allowed and does nothing
+- `ptr == NULL && len > 0` is invalid usage
+- non-null pointers are overwritten byte-by-byte with zeros
+- the implementation uses volatile access to reduce the chance that the compiler removes the wipe

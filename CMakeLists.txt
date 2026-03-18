@@ -202,6 +202,7 @@ if(BUILD_TESTS)
     add_executable(c_crypt_tests
         tests/test_main.c
         tests/unit/test_memory.c
+        tests/unit/test_endian.c
     )
 
     target_link_libraries(c_crypt_tests PRIVATE c_crypt_static)

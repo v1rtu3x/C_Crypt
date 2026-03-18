@@ -9,6 +9,7 @@
 extern "C" {
 #endif
 
+void c_secure_zero(void *ptr, size_t len);
 void c_memzero(void *ptr, size_t len);
 
 #ifdef __cplusplus

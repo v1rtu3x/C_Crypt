@@ -21,6 +21,7 @@ All modules must include this header when using integer types or core library ty
 
 
 typedef uint8_t c_byte_t; //Byte type used for buffers, keys nonces and other kind of raw binary i/o
+typedef uint16_t c_u16_t; //Unsigned 16-bit integer type used for length fields and small counters
 typedef uint32_t c_u32_t; //Unsigned 32-bit integer type used state words 
 typedef uint64_t c_u64_t; //Unsigned 64-bit integer type used for state words, counters and large lenght tracking
 
