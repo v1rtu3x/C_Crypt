@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include <stdint.h>
-#include "../../include/c_crypt/memory.h"
+#include "c_crypt/memory.h"
+#include "test.h"
 
 int c_test_memory_placeholder(void){
     uint8_t buf[8];

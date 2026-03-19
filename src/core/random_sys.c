@@ -1,3 +1,3 @@
-void c_random_sys_placeholder(void)
+static void c_random_sys_placeholder(void)
 {
 }

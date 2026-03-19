@@ -203,6 +203,8 @@ if(BUILD_TESTS)
         tests/test_main.c
         tests/unit/test_memory.c
         tests/unit/test_endian.c
+        tests/unit/test_ct.c
+        tests/unit/test_buf.c
     )
 
     target_link_libraries(c_crypt_tests PRIVATE c_crypt_static)
@@ -210,6 +212,7 @@ if(BUILD_TESTS)
     target_include_directories(c_crypt_tests PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests
     )
 
     target_compile_options(c_crypt_tests PRIVATE
@@ -251,6 +254,7 @@ if(BUILD_EXAMPLES)
     target_include_directories(c_crypt_example_placeholder PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests
     )
 
     target_compile_options(c_crypt_example_placeholder PRIVATE

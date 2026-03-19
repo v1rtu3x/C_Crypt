@@ -12,6 +12,8 @@ extern "C" {
 void c_secure_zero(void *ptr, size_t len);
 void c_memzero(void *ptr, size_t len);
 
+int c_memcmp_consttime(const void *a, const void *b, size_t len);
+
 #ifdef __cplusplus
 }
 #endif

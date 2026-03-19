@@ -1,5 +1,6 @@
 #include "c_crypt/types.h"
 #include "../../src/core/endian.h"
+#include "test.h"
 
 int c_test_endian(void){
 

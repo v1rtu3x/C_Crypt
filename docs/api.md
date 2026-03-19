@@ -336,3 +336,16 @@ Behavior:
 - `ptr == NULL && len > 0` is invalid usage
 - non-null pointers are overwritten byte-by-byte with zeros
 - the implementation uses volatile access to reduce the chance that the compiler removes the wipe
+
+## Secret Comparisons
+
+Do not use `memcmp()` to compare secrets.
+
+`memcmp()` may return as soon as it finds the first difference, which can leak timing information.
+
+Use `c_memcmp_consttime()` for comparing:
+
+- authentication tags
+- MAC outputs
+- hashes in security-sensitive checks
+- secret-derived values
